@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -q mpi_2 
+#PBS -l select=2:ncpus=28:mpiprocs=28:mem=60gb
+#PBS -l walltime=48:00:00 
+
+source /usr/share/Modules/3.2.10/init/bash
+module load impi/5.0.3.048
+module load R/3.2.4-intel-12.1.5
+
+cd $PBS_O_WORKDIR
+
+qstat -f $PBS_JOBID
+echo $TMPDIR
+echo $SCRATCH
+echo $DATAWORK
+echo $HOST
+pbsnodes $HOST
+
+# activation de R
+date
+time mpirun -n 56 R --vanilla --slave -q < minimalMPI.R >& myLogForMPI.log
+date
+
